@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom';
 import { albumsData, songsData } from '../assets/assets'; 
 
 const DisplayAlbum = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // Get album ID from URL
+
   const [albumDatalocal, setAlbumDatalocal] = useState(null);
 
   useEffect(() => {
@@ -14,11 +15,13 @@ const DisplayAlbum = () => {
     }
   }, [id]);
 
-  if (!albumDatalocal) {
+  if (!albumDatalocal) { // Check if album data is available
+
     return (
       <div className="bg-blue-800 min-h-screen">
         <Navbar />
-        <div className="text-white text-center mt-10 text-2xl">⚠️ Album Not Found</div>
+      <div className="text-white text-center mt-10 text-2xl">⚠️ Album Not Found</div> // Display message if album not found
+
       </div>
     );
   }
@@ -26,7 +29,8 @@ const DisplayAlbum = () => {
   return (
     <div className="bg-blue-800 min-h-screen pb-10">
       <Navbar />
-      <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end px-6">
+      <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end px-6"> // Layout for album details
+
         {/* Album Image */}
         <img className="w-48 rounded object-cover" src={albumDatalocal.image} alt={albumDatalocal.name} />
 
@@ -69,4 +73,4 @@ const DisplayAlbum = () => {
   );
 };
 
-export default DisplayAlbum; 
+export default DisplayAlbum;
