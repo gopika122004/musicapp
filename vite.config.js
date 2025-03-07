@@ -5,5 +5,4 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/Rythamictunes/', // Set the base path for GitHub Pages
   plugins: [react()],
-  
 })
