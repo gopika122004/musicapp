@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '', // Set a default base path
+  base: '/Rythamictunes/', // Set the base path for GitHub Pages
   plugins: [react()],
   
 })
