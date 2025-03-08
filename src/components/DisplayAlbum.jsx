@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
-import { albumsData, songsData } from '../assets/assets'; 
+import Navbar from './Navbar';
+import { albumsData, songsData } from '../assets/assets';
+import MusicPlayer from './MusicPlayer'; // Import the player
 
 const DisplayAlbum = () => {
-  const { id } = useParams(); // Get album ID from URL
-
+  const { id } = useParams();
   const [albumDatalocal, setAlbumDatalocal] = useState(null);
+  const [currentSong, setCurrentSong] = useState(null); // State for playing song
 
   useEffect(() => {
     const album = albumsData.find((album) => album.id === Number(id));
@@ -15,13 +16,16 @@ const DisplayAlbum = () => {
     }
   }, [id]);
 
-  if (!albumDatalocal) { // Check if album data is available
+  // Handle song click
+  const handleSongClick = (song) => {
+    setCurrentSong(song); // Set song to play
+  };
 
+  if (!albumDatalocal) {
     return (
       <div className="bg-blue-800 min-h-screen">
         <Navbar />
-      <div className="text-white text-center mt-10 text-2xl">⚠️ Album Not Found</div> // Display message if album not found
-
+        <div className="text-white text-center mt-10 text-2xl">⚠️ Album Not Found</div>
       </div>
     );
   }
@@ -29,10 +33,10 @@ const DisplayAlbum = () => {
   return (
     <div className="bg-blue-800 min-h-screen pb-10">
       <Navbar />
-      <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end px-6"> // Layout for album details
 
+      <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end px-6">
         {/* Album Image */}
-        <img className="w-48 rounded object-cover" src={albumDatalocal.image} alt={albumDatalocal.name} />
+        <img className="w-48 rounded object-cover" src={albumDatalocal.image || 'default-image-url.jpg'} alt={albumDatalocal.name} />
 
         {/* Album Details */}
         <div className="flex flex-col text-white">
@@ -57,18 +61,29 @@ const DisplayAlbum = () => {
       <hr />
 
       {/* Songs List */}
-      {songsData.map((item, index) => (
-        <div key={index} className="grid grid-cols-[50px_2fr_2fr_2fr_1fr] items-center gap-3 p-2 text-white hover:bg-[#FFB400] cursor-pointer">
-          <p className="text-center">{index + 1}</p>
-          <div className="flex items-center text-left">
-            <img className="w-10 h-10 object-cover rounded mr-4" src={item.image} alt={item.name} />
-            <p>{item.name}</p>
+      {songsData.length === 0 ? (
+        <div className="text-white text-center mt-10 text-2xl">⚠️ No Songs Available</div>
+      ) : (
+        songsData.map((item, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-[50px_2fr_2fr_2fr_1fr] items-center gap-3 p-2 text-white hover:bg-[#FFB400] cursor-pointer"
+            onClick={() => handleSongClick(item)}
+          >
+            <p className="text-center">{index + 1}</p>
+            <div className="flex items-center text-left">
+              <img className="w-10 h-10 object-cover rounded mr-4" src={item.image || 'default-image-url.jpg'} alt={item.name} />
+              <p>{item.name}</p>
+            </div>
+            <p className="text-left">{albumDatalocal.name}</p>
+            <p className="text-left">{item.dateAdded || '5 days ago'}</p>
+            <p className="text-center">{item.duration}</p>
           </div>
-          <p className="text-left">{albumDatalocal.name}</p>
-          <p className="text-left">{item.dateAdded || '5 days ago'}</p>
-          <p className="text-center">{item.duration}</p>
-        </div>
-      ))}
+        ))
+      )}
+
+      {/* Music Player (Visible only when a song is selected) */}
+      {currentSong && <MusicPlayer currentSong={currentSong} />}
     </div>
   );
 };

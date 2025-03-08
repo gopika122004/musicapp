@@ -152,6 +152,7 @@ export const songsData = [
     file: othasollala,
     desc: "Happy tunes from Dhanush!",
     duration: "3:59",
+    artist: "Dhanush",
   },
   {
     id: 1,
@@ -160,6 +161,7 @@ export const songsData = [
     file: kanavekanavae,
     desc: "Dive into Anirudh’s sad zone",
     duration: "4:44",
+    artist: "Anirudh",
   },
   {
     id: 2,
@@ -168,6 +170,7 @@ export const songsData = [
     file: naanpilaipeno,
     desc: "Crazy Love from Dhanush",
     duration: "6:12",
+    artist: "Dhanush",
   },
   {
     id: 3,
@@ -176,6 +179,7 @@ export const songsData = [
     file: aaruyire,
     desc: "Mesmerizing hits, A.R.R > everything",
     duration: "5:10",
+    artist: "A.R. Rahman",
   },
   {
     id: 4,
@@ -184,6 +188,7 @@ export const songsData = [
     file: anbeenanbe,
     desc: "Put a smile on your face with these happy tunes",
     duration: "5:40",
+    artist: "Anirudh",
   },
   {
     id: 5,
@@ -192,6 +197,7 @@ export const songsData = [
     file: poivalva,
     desc: "Don’t ever feel down, listen to this",
     duration: "3:59",
+    artist: "Anirudh",
   },
   {
     id: 6,
@@ -200,6 +206,7 @@ export const songsData = [
     file: sirukkivaasasm,
     desc: "Put a smile on your face with these happy tunes",
     duration: "4:35",
+    artist: "Anirudh",
   },
   {
     id: 7,
@@ -208,6 +215,7 @@ export const songsData = [
     file: bodhaikaname,
     desc: "Let go of stress with these chill vibes",
     duration: "4:22",
+    artist: "Anirudh",
   },
 ];
 

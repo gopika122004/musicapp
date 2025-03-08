@@ -1,78 +1,71 @@
-import React, { useState, useRef, useEffect } from "react";
-import { songsData } from "../assets/assets"; // ✅ Ensure correct path
-import { assets } from "../assets/assets"; // ✅ Import Icons
+import React, { useEffect, useRef, useState } from 'react';
 
-const MusicPlayer = () => {
-  const [allSongs] = useState(songsData); // ✅ Store all songs
-  const [currentSongIndex, setCurrentSongIndex] = useState(0); // ✅ Track index
+const MusicPlayer = ({ currentSong, songsData = [], setCurrentSong }) => {
+  const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(new Audio(songsData[currentSongIndex].file));
+
+  // Ensure currentSong is valid before using findIndex
+  const currentIndex = currentSong
+    ? songsData.findIndex(song => song.id === currentSong.id)
+    : -1;
 
   useEffect(() => {
-    const audio = audioRef.current;
-    audio.src = allSongs[currentSongIndex].file; // ✅ Update source on song change
-
-    if (isPlaying) {
-      audio.play();
-    } else {
-      audio.pause();
+    if (currentSong && currentSong.audio) {
+      audioRef.current.src = currentSong.audio;
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch((error) => console.log("Autoplay blocked:", error));
     }
+  }, [currentSong]);
 
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, [currentSongIndex, isPlaying, allSongs]);
-
-  const togglePlay = () => {
-    setIsPlaying((prev) => !prev);
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
   };
 
-  const nextSong = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % allSongs.length);
-    setIsPlaying(true);
+  const playNext = () => {
+    if (currentIndex !== -1 && currentIndex < songsData.length - 1) {
+      setCurrentSong(songsData[currentIndex + 1]);
+    }
   };
 
-  const prevSong = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex - 1 + allSongs.length) % allSongs.length);
-    setIsPlaying(true);
+  const playPrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentSong(songsData[currentIndex - 1]);
+    }
   };
+
+  if (!currentSong) {
+    return null; // Don't render if no song is selected
+  }
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-blue-900 text-white px-6 py-3 flex items-center justify-between shadow-lg rounded-lg z-50">
-      {/* Left Side - Album & Song Info */}
-      <div className="flex items-center gap-4">
-        <img src={allSongs[currentSongIndex].image} alt={allSongs[currentSongIndex].name} className="w-12 h-12 rounded-lg" />
+    <div className="bg-[#FFB400] text-white p-4 fixed bottom-0 w-full flex flex-col items-center">
+      {/* Song Details */}
+      <div className="flex items-center gap-4 mb-2">
+        <img src={currentSong.image} alt={currentSong.name} className="w-12 h-12 rounded" />
         <div>
-          <h3 className="text-sm font-semibold">{allSongs[currentSongIndex].name}</h3>
-          <p className="text-xs text-gray-300">{allSongs[currentSongIndex].artist}</p>
+          <p className="text-lg font-bold">{currentSong.name}</p>
+          <p className="text-sm">{currentSong.artist}</p>
         </div>
       </div>
 
-      {/* Center - Controls */}
+      {/* Controls */}
       <div className="flex items-center gap-6">
-        <button onClick={prevSong} className="hover:bg-[#FFB400] p-2 rounded-full transition duration-200">
-          <img src={assets.prev_icon} alt="Previous" className="w-6" />
+        <button onClick={playPrevious} className="text-white text-2xl">⏮️</button>
+        <button onClick={togglePlayPause} className="text-white text-2xl">
+          {isPlaying ? '⏸️' : '▶️'}
         </button>
-
-        <button onClick={togglePlay} className="bg-transparent rounded-full hover:bg-[#FFB400] p-2 transition duration-200">
-          <img src={isPlaying ? assets.pause_icon : assets.play_icon} alt="Play/Pause" className="w-6" />
-        </button>
-
-        <button onClick={nextSong} className="hover:bg-[#FFB400] p-2 rounded-full transition duration-200">
-          <img src={assets.next_icon} alt="Next" className="w-6" />
-        </button>
+        <button onClick={playNext} className="text-white text-2xl">⏭️</button>
       </div>
 
-      {/* Right Side - Volume & Queue */}
-      <div className="flex items-center gap-4">
-        <button className="hover:bg-[#FFB400] p-2 rounded-full transition duration-200">
-          <img src={assets.volume_icon} alt="Volume" className="w-6 cursor-pointer" />
-        </button>
-        <button className="hover:bg-[#FFB400] p-2 rounded-full transition duration-200">
-          <img src={assets.queue_icon} alt="Queue" className="w-6 cursor-pointer" />
-        </button>
-      </div>
+      <audio ref={audioRef} />
     </div>
   );
 };

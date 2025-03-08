@@ -1,16 +1,16 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./SearchBar"; // Importing the SearchBar
 
-
-
-const Navbar = () => {
+const Navbar = ({ setIsSearching }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[75%] mx-auto"> {/* Reduced width */}
+    <div className="w-[75%] mx-auto"> {/* Navbar Container */}
       {/* Top Navbar Section */}
       <div className="flex justify-between items-center font-semibold py-2">
+        
         {/* Navigation Arrows */}
         <div className="flex items-center gap-2">
           <img
@@ -27,6 +27,11 @@ const Navbar = () => {
           />
         </div>
 
+        {/* Search Bar - Centered */}
+        <div className="w-[40%]"> 
+          <SearchBar setIsSearching={setIsSearching} />
+        </div>
+
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
           <p className="bg-[#FFB400] text-black text-sm px-3 py-1 rounded-lg hidden md:block cursor-pointer">
@@ -39,9 +44,8 @@ const Navbar = () => {
             jk
           </p>
         </div>
-      </div>
 
-      
+      </div>
     </div>
   );
 };
